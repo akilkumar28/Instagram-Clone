@@ -7,9 +7,9 @@
 //
 
 import UIKit
+import Firebase
 
 class ViewController: UIViewController {
-
 
     // Outlets
 
@@ -20,13 +20,13 @@ class ViewController: UIViewController {
         return button
     }()
 
-
     let emailTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Email"
         textField.borderStyle = .roundedRect
         textField.backgroundColor = UIColor(white: 0, alpha: 0.03)
         textField.font = UIFont.systemFont(ofSize: 14)
+        textField.addTarget(self, action: #selector(handleTextfieldChange), for: .editingChanged)
         return textField
     }()
 
@@ -36,6 +36,7 @@ class ViewController: UIViewController {
         textField.borderStyle = .roundedRect
         textField.backgroundColor = UIColor(white: 0, alpha: 0.03)
         textField.font = UIFont.systemFont(ofSize: 14)
+        textField.addTarget(self, action: #selector(handleTextfieldChange), for: .editingChanged)
         return textField
     }()
 
@@ -46,6 +47,7 @@ class ViewController: UIViewController {
         textField.backgroundColor = UIColor(white: 0, alpha: 0.03)
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.isSecureTextEntry = true
+        textField.addTarget(self, action: #selector(handleTextfieldChange), for: .editingChanged)
         return textField
     }()
 
@@ -57,6 +59,7 @@ class ViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(signUpButtonTapped(sender:)), for: .touchUpInside)
+        button.isEnabled = false
         return button
     }()
 
@@ -89,26 +92,56 @@ class ViewController: UIViewController {
         verticalStackView.addArrangedSubview(signUpButton)
     }
 
-
     // Functions
-
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
 
-
     @objc func signUpButtonTapped(sender: UIButton) {
-        print("button tapped")
+        print("Trying to create a new user")
+
+        guard let email = emailTextField.text, email != "" else {
+            print("email textfield is empty")
+            return
+        }
+
+        guard let password = passwordTextField.text, password != "" else {
+            print("password textfield is empty")
+            return
+        }
+
+
+        guard let username = usernameTextField.text, username != "" else {
+            print("username is empty")
+            return
+        }
+
+        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+                return
+            }
+            print("Successfully created a user")
+        }
+
     }
 
     @objc func plusPhotoButtonTapped(sender:UIButton) {
         print("plus photo button tapped")
     }
 
+    @objc func handleTextfieldChange() {
+        let isFormValid = emailTextField.text?.count ?? 0 > 0 && passwordTextField.text?.count ?? 0 > 0 && usernameTextField.text?.count ?? 0 > 0
 
-
-
+        if isFormValid {
+            signUpButton.isEnabled = true
+            signUpButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+        } else {
+            signUpButton.isEnabled = false
+            signUpButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+        }
+    }
 
 }
 

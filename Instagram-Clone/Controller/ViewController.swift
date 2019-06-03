@@ -17,6 +17,7 @@ class ViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "plus_photo").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(plusPhotoButtonTapped(sender:)), for: .touchUpInside)
+        button.layer.cornerRadius = 140 / 2
         return button
     }()
 
@@ -72,6 +73,10 @@ class ViewController: UIViewController {
         return sv
     }()
 
+    // properties
+
+    var didChooseProfilePictureImageFromImagePickerController = false
+
     // life cycle methods
 
     override func viewDidLoad() {
@@ -94,11 +99,7 @@ class ViewController: UIViewController {
 
     // Functions
 
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
-
-    @objc func signUpButtonTapped(sender: UIButton) {
+    private func signUpUser() {
         print("Trying to create a new user")
 
         guard let email = emailTextField.text, email != "" else {
@@ -117,18 +118,69 @@ class ViewController: UIViewController {
             return
         }
 
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-            if error != nil {
-                print(error!.localizedDescription)
-                return
-            }
-            print("Successfully created a user")
+        guard didChooseProfilePictureImageFromImagePickerController, let profileImage = plusPhotoButton.currentImage else {
+            print("User not not select a profile image")
+            return
         }
 
+        AuthenticationManager.sharedInstance.createUser(withEmail: email, withPassword: password) { (success, result, error) in
+
+            guard success else {
+                print(error ?? "")
+                return
+            }
+
+            print("User successfully created")
+
+            guard let result = result else {
+                return
+            }
+
+            print("Trying to store user profile image")
+
+            StorageManager.sharedInstance.storeUserProfileImage(withImage: profileImage, completion: { (success, error, downloadURL) in
+                if !success {
+                    print(error ?? "")
+                }
+
+                let values = [
+                    AK_USERNAME: username,
+                    AK_PROFILE_IMAGE_DOWNLOAD_URL: downloadURL ?? ""
+                ]
+
+                print("Trying to store additional values for user to the database")
+                DatabaseManager.sharedInstance.createNewUserInDatabase(withUserId: result.user.uid, withValue: values, completion: { (success, error) in
+                    guard success else {
+                        print(error ?? "")
+                        return
+                    }
+
+                    print("Successfully stored additional values for user to the database")
+
+
+                    // segue to next screen
+
+                })
+
+            })
+
+
+        }
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+
+    @objc func signUpButtonTapped(sender: UIButton) {
+        signUpUser()
     }
 
     @objc func plusPhotoButtonTapped(sender:UIButton) {
-        print("plus photo button tapped")
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true, completion: nil)
     }
 
     @objc func handleTextfieldChange() {
@@ -143,5 +195,20 @@ class ViewController: UIViewController {
         }
     }
 
+}
+
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+            didChooseProfilePictureImageFromImagePickerController = true
+            plusPhotoButton.setImage(image.withRenderingMode(.alwaysOriginal), for: .normal)
+            plusPhotoButton.layer.cornerRadius = 140 / 2
+            plusPhotoButton.layer.masksToBounds = true
+            plusPhotoButton.layer.borderColor = UIColor.black.cgColor
+            plusPhotoButton.layer.borderWidth = 3.0
+            dismiss(animated: true, completion: nil)
+        }
+    }
 }
 

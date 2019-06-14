@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  LoginVC.swift
 //  Instagram-Clone
 //
 //  Created by Akil Kumar Thota on 4/10/19.
@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class ViewController: UIViewController {
+class LoginVC: UIViewController {
 
     // Outlets
 
@@ -82,6 +82,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.backgroundColor = .white
+
         view.addSubview(plusPhotoButton)
         view.addSubview(verticalStackView)
 
@@ -149,7 +151,7 @@ class ViewController: UIViewController {
                 ]
 
                 print("Trying to store additional values for user to the database")
-                DatabaseManager.sharedInstance.createNewUserInDatabase(withUserId: result.user.uid, withValue: values, completion: { (success, error) in
+                DatabaseManager.sharedInstance.updateUserValuesInDatabase(withUserId: result.user.uid, withValue: values, completion: { [unowned self] (success, error) in
                     guard success else {
                         print(error ?? "")
                         return
@@ -159,7 +161,8 @@ class ViewController: UIViewController {
 
 
                     // segue to next screen
-
+                    let rootTabBarVC = RootTabBarVC()
+                    self.present(rootTabBarVC, animated: true, completion: nil)
                 })
 
             })
@@ -197,7 +200,7 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension LoginVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {

@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		36348BA1225EA9D100B46C1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36348BA0225EA9D100B46C1F /* AppDelegate.swift */; };
-		36348BA3225EA9D100B46C1F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36348BA2225EA9D100B46C1F /* ViewController.swift */; };
-		36348BA6225EA9D100B46C1F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 36348BA4225EA9D100B46C1F /* Main.storyboard */; };
+		36348BA3225EA9D100B46C1F /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36348BA2225EA9D100B46C1F /* LoginVC.swift */; };
 		36348BA8225EA9D300B46C1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36348BA7225EA9D300B46C1F /* Assets.xcassets */; };
 		36348BAB225EA9D300B46C1F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 36348BA9225EA9D300B46C1F /* LaunchScreen.storyboard */; };
 		36348BB6225EA9D300B46C1F /* Instagram_CloneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36348BB5225EA9D300B46C1F /* Instagram_CloneTests.swift */; };
 		36348BC1225EA9D300B46C1F /* Instagram_CloneUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36348BC0225EA9D300B46C1F /* Instagram_CloneUITests.swift */; };
+		36551B7C22B35E1B00F29F66 /* RootTabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36551B7B22B35E1B00F29F66 /* RootTabBarVC.swift */; };
+		36551B7E22B362BE00F29F66 /* UserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36551B7D22B362BE00F29F66 /* UserProfileVC.swift */; };
+		36551B8022B3691300F29F66 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36551B7F22B3691300F29F66 /* User.swift */; };
 		366F83C42263E49E00403BF0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366F83C32263E49E00403BF0 /* Extensions.swift */; };
 		366F83C62263EED900403BF0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 366F83C52263EED800403BF0 /* GoogleService-Info.plist */; };
 		366FE4B122A4C7E40049C212 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366FE4B022A4C7E40049C212 /* AuthenticationManager.swift */; };
@@ -46,8 +48,7 @@
 		2DB836C6FDD241B701F33F82 /* Pods-Instagram-CloneUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram-CloneUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram-CloneUITests/Pods-Instagram-CloneUITests.release.xcconfig"; sourceTree = "<group>"; };
 		36348B9D225EA9D100B46C1F /* Instagram-Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Instagram-Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		36348BA0225EA9D100B46C1F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		36348BA2225EA9D100B46C1F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		36348BA5225EA9D100B46C1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		36348BA2225EA9D100B46C1F /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		36348BA7225EA9D300B46C1F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		36348BAA225EA9D300B46C1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		36348BAC225EA9D300B46C1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -57,6 +58,9 @@
 		36348BBC225EA9D300B46C1F /* Instagram-CloneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Instagram-CloneUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		36348BC0225EA9D300B46C1F /* Instagram_CloneUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Instagram_CloneUITests.swift; sourceTree = "<group>"; };
 		36348BC2225EA9D300B46C1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		36551B7B22B35E1B00F29F66 /* RootTabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarVC.swift; sourceTree = "<group>"; };
+		36551B7D22B362BE00F29F66 /* UserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileVC.swift; sourceTree = "<group>"; };
+		36551B7F22B3691300F29F66 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		366F83C32263E49E00403BF0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		366F83C52263EED800403BF0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		366FE4B022A4C7E40049C212 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
@@ -132,7 +136,6 @@
 				366F83C72263F1F700403BF0 /* Controller */,
 				366F83C22263E48600403BF0 /* Utilities */,
 				36348BA0225EA9D100B46C1F /* AppDelegate.swift */,
-				36348BA4225EA9D100B46C1F /* Main.storyboard */,
 				36348BA7225EA9D300B46C1F /* Assets.xcassets */,
 				36348BA9225EA9D300B46C1F /* LaunchScreen.storyboard */,
 				36348BAC225EA9D300B46C1F /* Info.plist */,
@@ -171,7 +174,9 @@
 		366F83C72263F1F700403BF0 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				36348BA2225EA9D100B46C1F /* ViewController.swift */,
+				36348BA2225EA9D100B46C1F /* LoginVC.swift */,
+				36551B7B22B35E1B00F29F66 /* RootTabBarVC.swift */,
+				36551B7D22B362BE00F29F66 /* UserProfileVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -186,6 +191,7 @@
 		366F83C92263F1FD00403BF0 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				36551B7F22B3691300F29F66 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -334,7 +340,6 @@
 				36348BAB225EA9D300B46C1F /* LaunchScreen.storyboard in Resources */,
 				366F83C62263EED900403BF0 /* GoogleService-Info.plist in Resources */,
 				36348BA8225EA9D300B46C1F /* Assets.xcassets in Resources */,
-				36348BA6225EA9D100B46C1F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,12 +445,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36348BA3225EA9D100B46C1F /* ViewController.swift in Sources */,
+				36348BA3225EA9D100B46C1F /* LoginVC.swift in Sources */,
 				366F83C42263E49E00403BF0 /* Extensions.swift in Sources */,
 				366FE4B322A4C9760049C212 /* DatabaseManager.swift in Sources */,
 				366FE4B722A4CC930049C212 /* StorageManager.swift in Sources */,
 				36348BA1225EA9D100B46C1F /* AppDelegate.swift in Sources */,
+				36551B7E22B362BE00F29F66 /* UserProfileVC.swift in Sources */,
 				366FE4B122A4C7E40049C212 /* AuthenticationManager.swift in Sources */,
+				36551B7C22B35E1B00F29F66 /* RootTabBarVC.swift in Sources */,
+				36551B8022B3691300F29F66 /* User.swift in Sources */,
 				366FE4B522A4CC340049C212 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -482,14 +490,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		36348BA4225EA9D100B46C1F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				36348BA5225EA9D100B46C1F /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		36348BA9225EA9D300B46C1F /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

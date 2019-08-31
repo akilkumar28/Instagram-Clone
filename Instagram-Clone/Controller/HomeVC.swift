@@ -54,7 +54,7 @@ class HomeVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo2"))
     }
     private func fetchPosts() {
-        DatabaseManager.sharedInstance.fetchPostForCurrentUser { [weak self] (posts) in
+        DatabaseManager.sharedInstance.fetchPosts(userUID: nil) { [weak self] (posts) in
             self?.posts = posts
             self?.collectionView.reloadData()
         }

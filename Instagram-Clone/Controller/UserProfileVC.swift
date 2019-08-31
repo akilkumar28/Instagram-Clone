@@ -44,7 +44,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     // functions
 
     private func fetchPost() {
-        DatabaseManager.sharedInstance.fetchPostForCurrentUser { [weak self] (posts) in
+        DatabaseManager.sharedInstance.fetchPosts(userUID: Auth.auth().currentUser?.uid) { [weak self] (posts) in
             self?.posts = posts
             self?.collectionView.reloadData()
         }

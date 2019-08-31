@@ -72,19 +72,53 @@ class DatabaseManager {
         }
     }
 
-    func fetchPostForCurrentUser(completion: @escaping (_ posts: [Post]) -> ()) {
-        let databaseReference = Database.database().reference().child("Posts").child(Auth.auth().currentUser!.uid)
+    // if UUID is given then fetch posts only for that user or else fetch every posts that we have in database
+    func fetchPosts(userUID: String?, completion: @escaping (_ posts: [Post]) -> ()) {
+
+        let databaseReference: DatabaseReference
+
+        if userUID != nil {
+            databaseReference = Database.database().reference().child("Posts").child(userUID!)
+        }
+        else {
+            databaseReference = Database.database().reference().child("Posts")
+        }
 
         databaseReference.queryOrdered(byChild: "creationDate").observeSingleEvent(of: .value) { snapshot in
             var posts = [Post]()
+
             guard snapshot.exists() else {
                 print("No post exist for the user")
                 completion(posts)
                 return
             }
 
-            guard let allPosts = snapshot.value as? [String: Any] else {
+            guard userUID == nil else {
+                // for one user
+                posts = self.getPostForUser(userDict: [snapshot.key: snapshot.value as Any])
                 completion(posts)
+                return
+            }
+
+            // for multiple users
+            guard let allUsersPosts = snapshot.value as? [String: Any] else {
+                completion(posts)
+                return
+            }
+
+            for userPost in allUsersPosts {
+                posts += self.getPostForUser(userDict: [userPost.key: userPost.value as Any])
+            }
+
+            completion(posts)
+        }
+    }
+
+    private func getPostForUser(userDict: [String: Any]) -> [Post] {
+        var posts = [Post]()
+
+        userDict.values.forEach {
+            guard let allPosts = $0 as? [String: Any] else {
                 return
             }
 
@@ -107,8 +141,8 @@ class DatabaseManager {
 
                 posts.append(newPost)
             }
-
-            completion(posts)
         }
+
+        return posts
     }
 }

@@ -26,4 +26,23 @@ class AuthenticationManager {
             completion(true, result, nil)
         }
     }
+
+    func signInUser(withEmail email: String, withPassword password: String, completion: @escaping (_ success: Bool) -> ()) {
+        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+                completion(false)
+                return
+            }
+
+            guard let _ = result else {
+                print("result not available during sign in")
+                completion(false)
+                return
+            }
+
+            print("Successfully signed in")
+            completion(true)
+        }
+    }
 }

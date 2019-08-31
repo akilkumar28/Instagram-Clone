@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
 
         window = UIWindow()
-        window?.rootViewController = RootTabBarVC()
+        window?.rootViewController = UINavigationController(rootViewController: LoginVC())
         window?.makeKeyAndVisible()
 
         return true

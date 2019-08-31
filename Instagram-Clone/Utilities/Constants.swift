@@ -11,3 +11,5 @@ import Foundation
 let AK_USERS = "Users"
 let AK_USERNAME = "Username"
 let AK_PROFILE_IMAGE_DOWNLOAD_URL = "ProfileImageDownloadURL"
+let AK_PROFILE_IMAGES = "Profile_Images"
+let AK_POST_IMAGES = "Post_Images"

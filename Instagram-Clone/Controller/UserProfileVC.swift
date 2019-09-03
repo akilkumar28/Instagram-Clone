@@ -11,40 +11,38 @@ import Firebase
 
 class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     // properties
-    
-    var user: User? {
-        didSet {
-            collectionView.reloadData()
-        }
-    }
+    var user: User?
 
     var posts: [Post] = []
 
     // life cycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchUserData()
 
-        navigationItem.title = "Profile"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(gearIconSelected))
-
+        navigationItem.title = user?.username
         collectionView.backgroundColor = .white
 
+        if user == nil {
+            fetchLoggedInUserDataAndUserPosts()
+        }
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(gearIconSelected))
 
         collectionView.register(UserProfileVCHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
         collectionView.register(PictureCell.self, forCellWithReuseIdentifier: "cell")
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchPost()
+        if user != nil {
+            fetchPost()
+        }
     }
 
     // functions
 
     private func fetchPost() {
-        DatabaseManager.sharedInstance.fetchPosts(userUID: Auth.auth().currentUser?.uid) { [weak self] (posts) in
+        DatabaseManager.sharedInstance.fetchPosts(userUID: user!.uid) { [weak self] (posts) in
             self?.posts = posts
             self?.collectionView.reloadData()
         }
@@ -72,7 +70,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         present(actionSheetVC, animated: true, completion: nil)
     }
 
-    private func fetchUserData() {
+    private func fetchLoggedInUserDataAndUserPosts() {
         guard let userId = Auth.auth().currentUser?.uid else {
             print("User id is not present")
             return
@@ -85,6 +83,8 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             }
 
             self?.user = user
+            self?.navigationItem.title = user.username
+            self?.fetchPost()
         }
     }
 
@@ -92,7 +92,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as? UserProfileVCHeader else {
             return UserProfileVCHeader()
         }
-
+        
         header.configureCell(user: user)
 
         return header

@@ -8,6 +8,7 @@
 
 import UIKit
 import SDWebImage
+import Firebase
 
 class UserProfileVCHeader: UICollectionReusableView {
 
@@ -79,14 +80,9 @@ class UserProfileVCHeader: UICollectionReusableView {
         return label
     }()
 
-    let editProfileButton: UIButton = {
+    let editProfileOrFollowButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Edit Profile", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.layer.borderColor = UIColor.lightGray.cgColor
-        button.layer.borderWidth = 1.0
-        button.layer.cornerRadius = 5.0
+        button.addTarget(self, action: #selector(editProfileFollowButtonTapped), for: .touchUpInside)
         return button
     }()
 
@@ -105,8 +101,8 @@ class UserProfileVCHeader: UICollectionReusableView {
 
         setupPersonalStats()
 
-        addSubview(editProfileButton)
-        editProfileButton.anchor(top: postLabel.bottomAnchor, left: postLabel.leftAnchor, bottom: nil, right: followingLabel.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 35)
+        addSubview(editProfileOrFollowButton)
+        editProfileOrFollowButton.anchor(top: postLabel.bottomAnchor, left: postLabel.leftAnchor, bottom: nil, right: followingLabel.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 35)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -147,10 +143,57 @@ class UserProfileVCHeader: UICollectionReusableView {
         guard let user = user else {
             return
         }
+
+        if user.uid == Auth.auth().currentUser?.uid  {
+            currentUserSetup(user: user)
+        }
+        else {
+            randomUserSetup(user: user)
+        }
         
         let url = URL(string: user.userProfileImageString)
         profileImageView.sd_setImage(with: url, completed: nil)
 
         userNameLabel.text = user.username
+    }
+
+    private func currentUserSetup(user: User) {
+        editProfileButtonSetup()
+    }
+
+    private func randomUserSetup(user: User) {
+        followButtonSetup()
+    }
+
+    private func followButtonSetup() {
+        editProfileOrFollowButton.setTitle("Follow", for: .normal)
+        editProfileOrFollowButton.setTitleColor(.white, for: .normal)
+        editProfileOrFollowButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+        editProfileOrFollowButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        editProfileOrFollowButton.layer.borderColor = UIColor.init(white: 0, alpha: 0.2).cgColor
+        editProfileOrFollowButton.layer.borderWidth = 1.0
+        editProfileOrFollowButton.layer.cornerRadius = 5.0
+    }
+
+    private func unFollowButtonSetup() {
+        editProfileOrFollowButton.setTitle("Unfollow", for: .normal)
+        editProfileOrFollowButton.setTitleColor(.black, for: .normal)
+        editProfileOrFollowButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        editProfileOrFollowButton.layer.borderColor = UIColor.lightGray.cgColor
+        editProfileOrFollowButton.layer.borderWidth = 1.0
+        editProfileOrFollowButton.layer.cornerRadius = 5.0
+    }
+
+    private func editProfileButtonSetup() {
+        editProfileOrFollowButton.setTitle("Edit Profile", for: .normal)
+        editProfileOrFollowButton.setTitleColor(.black, for: .normal)
+        editProfileOrFollowButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        editProfileOrFollowButton.layer.borderColor = UIColor.lightGray.cgColor
+        editProfileOrFollowButton.layer.borderWidth = 1.0
+        editProfileOrFollowButton.layer.cornerRadius = 5.0
+    }
+
+    @objc private func editProfileFollowButtonTapped() {
+        print("follow tapped")
     }
 }

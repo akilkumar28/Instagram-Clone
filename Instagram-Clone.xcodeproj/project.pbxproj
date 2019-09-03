@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		361B5A16231B5030005DE757 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361B5A15231B5030005DE757 /* SearchVC.swift */; };
+		361B5A18231B5362005DE757 /* UserSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361B5A17231B5362005DE757 /* UserSearchCell.swift */; };
 		36348BA1225EA9D100B46C1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36348BA0225EA9D100B46C1F /* AppDelegate.swift */; };
 		36348BA3225EA9D100B46C1F /* SignUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36348BA2225EA9D100B46C1F /* SignUPVC.swift */; };
 		36348BA8225EA9D300B46C1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36348BA7225EA9D300B46C1F /* Assets.xcassets */; };
@@ -54,6 +56,8 @@
 
 /* Begin PBXFileReference section */
 		2DB836C6FDD241B701F33F82 /* Pods-Instagram-CloneUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram-CloneUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram-CloneUITests/Pods-Instagram-CloneUITests.release.xcconfig"; sourceTree = "<group>"; };
+		361B5A15231B5030005DE757 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
+		361B5A17231B5362005DE757 /* UserSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchCell.swift; sourceTree = "<group>"; };
 		36348B9D225EA9D100B46C1F /* Instagram-Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Instagram-Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		36348BA0225EA9D100B46C1F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		36348BA2225EA9D100B46C1F /* SignUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUPVC.swift; sourceTree = "<group>"; };
@@ -197,6 +201,7 @@
 				36FF686922EA583200D0E029 /* PictureVC.swift */,
 				36FF686D22EB7A5F00D0E029 /* ShareVC.swift */,
 				36D9D77023134B1E00B6FE08 /* HomeVC.swift */,
+				361B5A15231B5030005DE757 /* SearchVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -207,6 +212,7 @@
 				3651A6B822E505BD00096A04 /* UserProfileVCHeader.swift */,
 				36FF686B22EA612400D0E029 /* PictureCell.swift */,
 				36D9D77223134C6E00B6FE08 /* HomePostCell.swift */,
+				361B5A17231B5362005DE757 /* UserSearchCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -471,6 +477,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				361B5A18231B5362005DE757 /* UserSearchCell.swift in Sources */,
 				36348BA3225EA9D100B46C1F /* SignUPVC.swift in Sources */,
 				366F83C42263E49E00403BF0 /* Extensions.swift in Sources */,
 				36D9D77323134C6E00B6FE08 /* HomePostCell.swift in Sources */,
@@ -480,6 +487,7 @@
 				36D9D77123134B1E00B6FE08 /* HomeVC.swift in Sources */,
 				366FE4B722A4CC930049C212 /* StorageManager.swift in Sources */,
 				36348BA1225EA9D100B46C1F /* AppDelegate.swift in Sources */,
+				361B5A16231B5030005DE757 /* SearchVC.swift in Sources */,
 				36551B7E22B362BE00F29F66 /* UserProfileVC.swift in Sources */,
 				366FE4B122A4C7E40049C212 /* AuthenticationManager.swift in Sources */,
 				36551B7C22B35E1B00F29F66 /* RootTabBarVC.swift in Sources */,

@@ -32,7 +32,7 @@ class RootTabBarVC: UITabBarController {
     }
 
     private func searchVC() -> UIViewController {
-        let searchVC = UIViewController()
+        let searchVC = SearchVC(collectionViewLayout: UICollectionViewFlowLayout())
         return templateNavigationController(viewController: searchVC, tabBarSelectedImage: #imageLiteral(resourceName: "search_unselected"), tabBarUnselectedImage: #imageLiteral(resourceName: "search_selected"))
     }
 

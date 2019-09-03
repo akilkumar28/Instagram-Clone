@@ -35,8 +35,9 @@ class DatabaseManager {
 
             let username = result[AK_USERNAME] as? String ?? "Not Available"
             let profileImageDownloadURL = result[AK_PROFILE_IMAGE_DOWNLOAD_URL] as? String ?? ""
+            let uid = snapshot.key
 
-            let user = User(username: username, userProfileImageString: profileImageDownloadURL)
+            let user = User(username: username, uid: uid, userProfileImageString: profileImageDownloadURL)
 
             completion(user)
 
@@ -115,6 +116,14 @@ class DatabaseManager {
     }
 
     private func getPostForUser(userDict: [String: Any]) -> [Post] {
+
+        guard userDict.count  == 1 else {
+            print("userDict count more than 1")
+            return []
+        }
+
+        let uid = userDict.first!.key
+
         var posts = [Post]()
 
         userDict.values.forEach {
@@ -135,7 +144,7 @@ class DatabaseManager {
                 let userName = post["username"] as? String ?? ""
                 let userProfilImageString = post["userProfileImageString"] as? String ?? ""
 
-                let user = User(username: userName, userProfileImageString: userProfilImageString)
+                let user = User(username: userName, uid: uid, userProfileImageString: userProfilImageString)
 
                 let newPost = Post(user: user, summary: summary, imageDownloadURL: imageDownloadURL, imageWidth: imageWidth, imageHeight: imageHeight, creationDate: Date(timeIntervalSince1970: creationDate))
 
@@ -144,5 +153,40 @@ class DatabaseManager {
         }
 
         return posts
+    }
+
+    func fetchAllUsersFromDatabase(completion: @escaping ([User]?) -> Void) {
+        Database.database().reference().child(AK_USERS).observe(.value) { (snapshot) in
+            guard snapshot.exists() else {
+                completion(nil)
+                return
+            }
+
+            var users = [User]()
+
+            guard let allUsers = snapshot.value as? [String: Any] else {
+                completion(nil)
+                return
+            }
+
+            allUsers.forEach {
+                guard $0.key != Auth.auth().currentUser?.uid else {
+                    return
+                }
+
+                guard let userInformation = $0.value as? [String: Any] else {
+                    return
+                }
+
+                let username = userInformation[AK_USERNAME] as? String ?? ""
+                let profileImageURL = userInformation[AK_PROFILE_IMAGE_DOWNLOAD_URL] as? String ?? ""
+
+                let newUser = User(username: username, uid: $0.key, userProfileImageString: profileImageURL)
+
+                users.append(newUser)
+            }
+
+            completion(users)
+        }
     }
 }

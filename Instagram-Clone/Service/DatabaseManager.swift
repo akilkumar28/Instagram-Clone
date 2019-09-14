@@ -189,4 +189,81 @@ class DatabaseManager {
             completion(users)
         }
     }
+
+    func followUser(currentUserUID: String, userToFollowUID: String, completion: @escaping (_ success: Bool) -> Void) {
+        let ref = Database.database().reference().child("Following").child(currentUserUID)
+
+        ref.updateChildValues([userToFollowUID: 1]) { (error, ref) in
+            if error != nil {
+                print(error!.localizedDescription)
+                completion(false)
+                return
+            }
+
+            completion(true)
+        }
+    }
+
+    func isFollowingUser(currentUserUID: String, followingUserToCheck userUID: String, completion: @escaping (_ success: Bool) -> Void) {
+        let ref = Database.database().reference().child("Following").child(currentUserUID).child(userUID)
+
+        ref.observeSingleEvent(of: .value) { (snapshot) in
+            guard snapshot.exists() else {
+                completion(false)
+                return
+            }
+
+            guard let value = snapshot.value as? Int, value == 1 else {
+                completion(false)
+                return
+            }
+
+            completion(true)
+        }
+    }
+
+    func unFollowUser(currentUserUID: String, userToFollowUID: String, completion: @escaping (_ success: Bool) -> Void) {
+        let ref = Database.database().reference().child("Following").child(currentUserUID)
+
+        ref.removeValue { (error, ref) in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                completion(false)
+                return
+            }
+
+            completion(true)
+        }
+    }
+
+    func getFollowersUIDsForUser(userUID: String, completion: @escaping ([String]) -> Void) {
+        Database.database().reference().child("Following").child(userUID).observe(.value) { (snapshot) in
+            guard snapshot.exists(), let users = snapshot.value as? [String: Int] else {
+                completion([])
+                return
+            }
+            var followers = [String]()
+            for user in users {
+                followers.append(user.key)
+            }
+            completion(followers)
+        }
+    }
+
+    func getFollowersPostsForUser(userUID: String, completion: @escaping ([Post]) -> ()) {
+        var posts = [Post]()
+        let dispatchGroup = DispatchGroup()
+        getFollowersUIDsForUser(userUID: userUID) { (followers) in
+            for followerUID in followers {
+                dispatchGroup.enter()
+                self.fetchPosts(userUID: followerUID) { (followerPosts) in
+                    posts.append(contentsOf: followerPosts)
+                    dispatchGroup.leave()
+                }
+            }
+            dispatchGroup.notify(queue: .main) {
+                completion(posts)
+            }
+        }
+    }
 }

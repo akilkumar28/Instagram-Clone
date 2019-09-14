@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class HomeVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
@@ -54,8 +55,12 @@ class HomeVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo2"))
     }
     private func fetchPosts() {
-        DatabaseManager.sharedInstance.fetchPosts(userUID: nil) { [weak self] (posts) in
+        posts.removeAll()
+        DatabaseManager.sharedInstance.getFollowersPostsForUser(userUID: Auth.auth().currentUser!.uid) { [weak self] (posts) in
             self?.posts = posts
+            self?.posts.sort(by: {
+                $0.creationDate > $1.creationDate
+            })
             self?.collectionView.reloadData()
         }
     }

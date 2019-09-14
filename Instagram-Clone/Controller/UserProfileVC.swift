@@ -44,6 +44,9 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     private func fetchPost() {
         DatabaseManager.sharedInstance.fetchPosts(userUID: user!.uid) { [weak self] (posts) in
             self?.posts = posts
+            self?.posts.sort(by: {
+                $0.creationDate > $1.creationDate
+            })
             self?.collectionView.reloadData()
         }
     }
@@ -92,8 +95,9 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as? UserProfileVCHeader else {
             return UserProfileVCHeader()
         }
-        
-        header.configureCell(user: user)
+
+        header.user = user
+        header.configureCell()
 
         return header
     }

@@ -12,6 +12,8 @@ import Firebase
 
 class UserProfileVCHeader: UICollectionReusableView {
 
+    var user: User?
+
     let profileImageView: UIImageView = {
         let iv = UIImageView()
         return iv
@@ -80,7 +82,7 @@ class UserProfileVCHeader: UICollectionReusableView {
         return label
     }()
 
-    let editProfileOrFollowButton: UIButton = {
+    lazy var editProfileOrFollowButton: UIButton = {
         let button = UIButton(type: .system)
         button.addTarget(self, action: #selector(editProfileFollowButtonTapped), for: .touchUpInside)
         return button
@@ -139,16 +141,16 @@ class UserProfileVCHeader: UICollectionReusableView {
         bottomDivider.anchor(top: stackView.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
     }
 
-    func configureCell(user: User?) {
+    func configureCell() {
         guard let user = user else {
             return
         }
 
         if user.uid == Auth.auth().currentUser?.uid  {
-            currentUserSetup(user: user)
+            currentUserSetup()
         }
         else {
-            randomUserSetup(user: user)
+            randomUserSetup()
         }
         
         let url = URL(string: user.userProfileImageString)
@@ -157,12 +159,23 @@ class UserProfileVCHeader: UICollectionReusableView {
         userNameLabel.text = user.username
     }
 
-    private func currentUserSetup(user: User) {
+    private func currentUserSetup() {
         editProfileButtonSetup()
     }
 
-    private func randomUserSetup(user: User) {
-        followButtonSetup()
+    private func randomUserSetup() {
+        guard let user = user else {
+            return
+        }
+
+        DatabaseManager.sharedInstance.isFollowingUser(currentUserUID: Auth.auth().currentUser!.uid, followingUserToCheck: user.uid) { [weak self] (success) in
+            if success {
+                self?.unFollowButtonSetup()
+            }
+            else {
+                self?.followButtonSetup()
+            }
+        }
     }
 
     private func followButtonSetup() {
@@ -178,6 +191,7 @@ class UserProfileVCHeader: UICollectionReusableView {
     private func unFollowButtonSetup() {
         editProfileOrFollowButton.setTitle("Unfollow", for: .normal)
         editProfileOrFollowButton.setTitleColor(.black, for: .normal)
+        editProfileOrFollowButton.backgroundColor = UIColor.white
         editProfileOrFollowButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         editProfileOrFollowButton.layer.borderColor = UIColor.lightGray.cgColor
         editProfileOrFollowButton.layer.borderWidth = 1.0
@@ -194,6 +208,32 @@ class UserProfileVCHeader: UICollectionReusableView {
     }
 
     @objc private func editProfileFollowButtonTapped() {
-        print("follow tapped")
+        if Auth.auth().currentUser?.uid == user?.uid {
+            print("edit button tapped")
+        }
+        else {
+            // follow unfollow scenario
+
+            if editProfileOrFollowButton.titleLabel?.text == "Follow" {
+                // follow
+                DatabaseManager.sharedInstance.followUser(currentUserUID: Auth.auth().currentUser!.uid, userToFollowUID: user!.uid) { [weak self] (success) in
+                    guard success else {
+                        return
+                    }
+
+                    self?.unFollowButtonSetup()
+                }
+            }
+            else {
+                // unfollow
+                DatabaseManager.sharedInstance.unFollowUser(currentUserUID: Auth.auth().currentUser!.uid, userToFollowUID: user!.uid) { [weak self] (success) in
+                    guard success else {
+                        return
+                    }
+
+                    self?.followButtonSetup()
+                }
+            }
+        }
     }
 }

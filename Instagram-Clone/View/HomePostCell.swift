@@ -9,7 +9,18 @@
 import UIKit
 import SDWebImage
 
+protocol HomePostCellProtocolDelegate: class {
+    func commentButtonTapped(post: Post)
+    func likeButtonTapped(post: Post)
+    func sendDirectMessageButtonTapped(post: Post)
+    func bookMarkButtonTapped(post: Post)
+}
+
 class HomePostCell: UICollectionViewCell {
+
+    var post: Post?
+
+    weak var homePostCellDelegate: HomePostCellProtocolDelegate?
 
     let postImageView: UIImageView = {
         let iv = UIImageView()
@@ -39,27 +50,31 @@ class HomePostCell: UICollectionViewCell {
         return button
     }()
 
-    let likeButton: UIButton = {
+    lazy var likeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "like_unselected"), for: .normal)
+        button.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         return button
     }()
 
-    let commentButton: UIButton = {
+    lazy var commentButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "comment"), for: .normal)
+        button.addTarget(self, action: #selector(commentButtonTapped), for: .touchUpInside)
         return button
     }()
 
-    let sendButton: UIButton = {
+    lazy var sendButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "send2"), for: .normal)
+        button.addTarget(self, action: #selector(sendDirectMessageButtonTapped), for: .touchUpInside)
         return button
     }()
 
-    let ribbonButton: UIButton = {
+    lazy var ribbonButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "ribbon"), for: .normal)
+        button.addTarget(self, action: #selector(bookmarkButtonTapped), for: .touchUpInside)
         return button
     }()
 
@@ -96,7 +111,8 @@ class HomePostCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configureCell(post: Post) {
+    func configureCell() {
+        guard let post = post else { return }
         userNameLabel.text = post.user.username
 
         let newlineText = NSAttributedString(string: "\n\n", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 4)])
@@ -137,5 +153,25 @@ class HomePostCell: UICollectionViewCell {
     private func setupSummarySection() {
         addSubview(summaryText)
         summaryText.anchor(top: likeButton.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 5, paddingLeft: 15, paddingBottom: 0, paddingRight: 5, width: 0, height: 0)
+    }
+
+    @objc private func commentButtonTapped() {
+        guard let post = post else { return }
+        homePostCellDelegate?.commentButtonTapped(post: post)
+    }
+
+    @objc private func likeButtonTapped() {
+        guard let post = post else { return }
+        homePostCellDelegate?.likeButtonTapped(post: post)
+    }
+
+    @objc private func sendDirectMessageButtonTapped() {
+        guard let post = post else { return }
+        homePostCellDelegate?.sendDirectMessageButtonTapped(post: post)
+    }
+
+    @objc private func bookmarkButtonTapped() {
+        guard let post = post else { return }
+        homePostCellDelegate?.bookMarkButtonTapped(post: post)
     }
 }

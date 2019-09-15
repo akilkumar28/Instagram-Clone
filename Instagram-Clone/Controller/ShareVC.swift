@@ -106,7 +106,10 @@ class ShareVC: UIViewController {
                     print("No user present while fetching in Share VC")
                     return
                 }
-                let post = Post(user: user, summary: summary, imageDownloadURL: downloadURL, imageWidth: image.size.width, imageHeight: image.size.height, creationDate: Date())
+
+                let postId = UUID().uuidString
+
+                let post = Post(postId: postId, user: user, summary: summary, imageDownloadURL: downloadURL, imageWidth: image.size.width, imageHeight: image.size.height, creationDate: Date())
 
                 DatabaseManager.sharedInstance.savePostToDatabase(post: post, completion: { (success) in
                     if !success {

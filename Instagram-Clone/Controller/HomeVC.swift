@@ -13,11 +13,18 @@ class HomeVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
     var posts = [Post]()
 
+    var refreshControl: UIRefreshControl!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.backgroundColor = .white
 
         collectionView.register(HomePostCell.self, forCellWithReuseIdentifier: "cell")
+
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(collectionViewRefreshCalled), for: .valueChanged)
+
+        collectionView.refreshControl = refreshControl
 
         setupNavigationItems()
     }
@@ -28,10 +35,16 @@ class HomeVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         fetchPosts()
     }
 
+    @objc private func collectionViewRefreshCalled() {
+        fetchPosts()
+    }
+
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? HomePostCell {
             let post = posts[indexPath.row]
-            cell.configureCell(post: post)
+            cell.post = post
+            cell.homePostCellDelegate = self
+            cell.configureCell()
             return cell
         }
         else {
@@ -62,6 +75,26 @@ class HomeVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
                 $0.creationDate > $1.creationDate
             })
             self?.collectionView.reloadData()
+            self?.refreshControl.endRefreshing()
         }
+    }
+}
+
+extension HomeVC: HomePostCellProtocolDelegate {
+    func commentButtonTapped(post: Post) {
+        let commentsVC = CommentsVC(post: post)
+        navigationController?.pushViewController(commentsVC, animated: true)
+    }
+
+    func likeButtonTapped(post: Post) {
+        print("like button tapped")
+    }
+
+    func sendDirectMessageButtonTapped(post: Post) {
+        print("send message button tapped")
+    }
+
+    func bookMarkButtonTapped(post: Post) {
+        print("bookmark button tapped")
     }
 }

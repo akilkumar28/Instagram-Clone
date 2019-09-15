@@ -49,9 +49,10 @@ class DatabaseManager {
     }
 
     func savePostToDatabase(post: Post, completion: @escaping (_ success: Bool) -> ()) {
-        let databaseReference = Database.database().reference().child("Posts").child(Auth.auth().currentUser!.uid).childByAutoId()
+        let databaseReference = Database.database().reference().child("Posts").child(Auth.auth().currentUser!.uid).child(post.postId)
         
         let values: [String: Any] = [
+            "PostId": post.postId,
             "Summary": post.summary,
             "imageDownloadURL": post.imageDownloadURL,
             "imageWidth": post.imageWidth,
@@ -143,10 +144,11 @@ class DatabaseManager {
                 let creationDate = post["creationDate"] as? Double ?? 0.0
                 let userName = post["username"] as? String ?? ""
                 let userProfilImageString = post["userProfileImageString"] as? String ?? ""
+                let postId = post["PostId"] as? String ?? ""
 
                 let user = User(username: userName, uid: uid, userProfileImageString: userProfilImageString)
 
-                let newPost = Post(user: user, summary: summary, imageDownloadURL: imageDownloadURL, imageWidth: imageWidth, imageHeight: imageHeight, creationDate: Date(timeIntervalSince1970: creationDate))
+                let newPost = Post(postId: postId, user: user, summary: summary, imageDownloadURL: imageDownloadURL, imageWidth: imageWidth, imageHeight: imageHeight, creationDate: Date(timeIntervalSince1970: creationDate))
 
                 posts.append(newPost)
             }
@@ -156,7 +158,7 @@ class DatabaseManager {
     }
 
     func fetchAllUsersFromDatabase(completion: @escaping ([User]?) -> Void) {
-        Database.database().reference().child(AK_USERS).observe(.value) { (snapshot) in
+        Database.database().reference().child(AK_USERS).observeSingleEvent(of: .value) { (snapshot) in
             guard snapshot.exists() else {
                 completion(nil)
                 return
@@ -237,7 +239,7 @@ class DatabaseManager {
     }
 
     func getFollowersUIDsForUser(userUID: String, completion: @escaping ([String]) -> Void) {
-        Database.database().reference().child("Following").child(userUID).observe(.value) { (snapshot) in
+        Database.database().reference().child("Following").child(userUID).observeSingleEvent(of: .value) { (snapshot) in
             guard snapshot.exists(), let users = snapshot.value as? [String: Int] else {
                 completion([])
                 return
@@ -264,6 +266,64 @@ class DatabaseManager {
             dispatchGroup.notify(queue: .main) {
                 completion(posts)
             }
+        }
+    }
+
+    func addCommentForPost(post: Post, comment: PostComment, completion: @escaping (Bool) -> Void) {
+        let commentToAdd = [
+            "username": comment.username,
+            "userUID" : comment.userUID,
+            "commentID": comment.commentID,
+            "userProfilePicImageURL": comment.userProfilePicImageURL,
+            "comment": comment.comment,
+            "creationDate": comment.creationDate.timeIntervalSince1970
+            ] as [String : Any]
+        let value = [comment.commentID: commentToAdd]
+
+        Database.database().reference().child("Comments").child(post.postId).updateChildValues(value) { (error, ref) in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                completion(false)
+                return
+            }
+
+            completion(true)
+        }
+    }
+
+    func fetchCommentsForPost(post: Post, completion: @escaping ([PostComment]) -> Void) {
+        Database.database().reference().child("Comments").child(post.postId).observeSingleEvent(of: .value) { (snapshot) in
+            guard snapshot.exists() else {
+                completion([])
+                return
+            }
+
+            guard let allComments = snapshot.value as? [String: Any] else {
+                print("allComments couldnt be fetched")
+                completion([])
+                return
+            }
+
+            var comments = [PostComment]()
+
+            for comment in allComments {
+                guard let commentValue = comment.value as? [String: Any] else {
+                    continue
+                }
+
+                let username = commentValue["username"] as? String ?? ""
+                let userUID = commentValue["userUID"] as? String ?? ""
+                let commentId = commentValue["commentID"] as? String ?? ""
+                let userProfileImageURL = commentValue["userProfilePicImageURL"] as? String ?? ""
+                let commentString = commentValue["comment"] as? String ?? ""
+                let creationDate = commentValue["creationDate"] as? Double ?? 0.0
+
+                let newComment = PostComment(username: username, userUID: userUID, commentID: commentId, userProfilePicImageURL: userProfileImageURL, comment: commentString, creationDate: Date(timeIntervalSince1970: creationDate))
+
+                comments.append(newComment)
+            }
+
+            completion(comments)
         }
     }
 }

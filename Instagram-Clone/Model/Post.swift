@@ -9,6 +9,7 @@
 import UIKit
 
 struct Post {
+    let postId: String
     let user: User
     let summary: String
     let imageDownloadURL: String

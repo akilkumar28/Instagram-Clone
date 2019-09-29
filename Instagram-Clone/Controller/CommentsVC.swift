@@ -107,7 +107,7 @@ class CommentsVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.size.width, height: 50)
+        return CGSize(width: collectionView.bounds.size.width, height: 100)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

@@ -12,6 +12,7 @@ class CommentsCell: UICollectionViewCell {
 
     let profileImage: UIImageView = {
         let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
         return iv
     }()
 
@@ -30,7 +31,7 @@ class CommentsCell: UICollectionViewCell {
 
     let separatorLineView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = UIColor(white: 0, alpha: 0.5)
         return view
     }()
 
@@ -45,11 +46,12 @@ class CommentsCell: UICollectionViewCell {
         addSubview(usernameLabel)
         usernameLabel.anchor(top: topAnchor, left: profileImage.rightAnchor, bottom: nil, right: nil, paddingTop: 5, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
 
-        addSubview(commentLabel)
-        commentLabel.anchor(top: usernameLabel.bottomAnchor, left: profileImage.rightAnchor, bottom: nil, right: rightAnchor, paddingTop: 5, paddingLeft: 8, paddingBottom: 0, paddingRight: 5, width: 0, height: 0)
 
         addSubview(separatorLineView)
-        separatorLineView.anchor(top: commentLabel.bottomAnchor, left: profileImage.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 5, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 1)
+        separatorLineView.anchor(top: nil, left: profileImage.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 1)
+
+        addSubview(commentLabel)
+        commentLabel.anchor(top: usernameLabel.bottomAnchor, left: profileImage.rightAnchor, bottom: separatorLineView.topAnchor, right: rightAnchor, paddingTop: 5, paddingLeft: 8, paddingBottom: 0, paddingRight: 5, width: 0, height: 0)
 
     }
 
